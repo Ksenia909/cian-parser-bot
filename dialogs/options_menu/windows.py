@@ -4,7 +4,7 @@ from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const
 
-from dialogs.options_menu import keyboards
+from dialogs.options_menu import keyboards, getters
 from dialogs.options_menu.constants import IMAGE_LINKS
 from dialogs.options_menu.states import MenuSG
 from dialogs.options_menu import selected as s
@@ -41,12 +41,16 @@ def lines_window():
             url=IMAGE_LINKS['lines'],
             type=ContentType.PHOTO
         ),
-        state=MenuSG.select_line
+        keyboards.lines_keyboards(s.selected_line),
+        keyboards.back_to_menu(s.selected_back_to_menu),
+        state=MenuSG.select_line,
+        getter=getters.get_lines
     )
 
 
 def stations_window():
     return Window(
+        keyboards.back_to_menu(s.selected_back_to_menu),
         state=MenuSG.select_station
     )
 
@@ -57,6 +61,7 @@ def time_window():
             url=IMAGE_LINKS['time'],
             type=ContentType.PHOTO
         ),
+        keyboards.back_to_menu(s.selected_back_to_menu),
         state=MenuSG.select_time
     )
 
@@ -67,6 +72,7 @@ def rooms_window():
             url=IMAGE_LINKS['rooms'],
             type=ContentType.PHOTO
         ),
+        keyboards.back_to_menu(s.selected_back_to_menu),
         state=MenuSG.select_rooms
     )
 
@@ -78,6 +84,7 @@ def price_window():
             type=ContentType.PHOTO
         ),
         Const(TEXT_OF_WINDOWS['time']),
+        keyboards.back_to_menu(s.selected_back_to_menu),
         state=MenuSG.select_price
     )
 

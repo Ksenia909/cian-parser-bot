@@ -13,7 +13,7 @@ async def command_start_process(message: Message, dialog_manager: DialogManager)
     await dialog_manager.start(state=MenuSG.start, mode=StartMode.RESET_STACK)
 
 
-@router.message(Command(commands='menu'))
-async def command_menu_process(message: Message, dialog_manager: DialogManager):
-    await dialog_manager.switch_to(state=MenuSG.menu)
+# @router.message(Command(commands='menu'))
+# async def command_menu_process(message: Message, dialog_manager: DialogManager):
+#     await dialog_manager.switch_to(state=MenuSG.menu)
 
