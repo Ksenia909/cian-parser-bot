@@ -1,11 +1,16 @@
 from dialogs.options_menu.states import MenuSG
 
+SCROLLING_HEIGHT = 6
+
 MENU_BUTTON_STATES = {
     'metro': MenuSG.select_line,
     'time': MenuSG.select_time,
     'rooms': MenuSG.select_rooms,
     'price': MenuSG.select_price,
 }
+
+NUMBER_OF_ROOMS = {'Студия': 9, '1-комнатная': 1, '2-комнатная': 2, '3-комнатная': 3, '4-комнатная': 4,
+                   '5-комнатная': 5, '6-комнатная': 6}
 
 IMAGE_LINKS = {
     'start': 'https://img.freepik.com/free-vector/tiny-house-concept-illustration_114360-9087.jpg?t=st=1710405128~exp=1710408728~hmac=60a8041775018a0e3f1f3ec1ec38d70ac4c7c5698d0c5da24c46a67b9f2b8fcc&w=826',

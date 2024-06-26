@@ -1,8 +1,9 @@
 from aiogram.enums import ContentType
 from aiogram_dialog import Window
+from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.media import StaticMedia
-from aiogram_dialog.widgets.text import Const
+from aiogram_dialog.widgets.text import Const, Format
 
 from dialogs.options_menu import keyboards, getters
 from dialogs.options_menu.constants import IMAGE_LINKS
@@ -25,7 +26,7 @@ def start_window():
 
 def options_menu_window():
     return Window(
-        Const("test menu"),
+        Const("test menu"),                              #тут можно добавить данные, взятые из контекста
         StaticMedia(
             url=IMAGE_LINKS['options_menu'],
             type=ContentType.PHOTO
@@ -50,7 +51,10 @@ def lines_window():
 
 def stations_window():
     return Window(
+        Format('Линия {name_line}'),
+        keyboards.stations_keyboards(s.selected_station),
         keyboards.back_to_menu(s.selected_back_to_menu),
+        getter=getters.get_stations,
         state=MenuSG.select_station
     )
 
@@ -60,6 +64,11 @@ def time_window():
         StaticMedia(
             url=IMAGE_LINKS['time'],
             type=ContentType.PHOTO
+        ),
+        Const(TEXT_OF_WINDOWS['time']),
+        TextInput(
+            id='time',
+            on_success=s.selected_time
         ),
         keyboards.back_to_menu(s.selected_back_to_menu),
         state=MenuSG.select_time
@@ -72,7 +81,9 @@ def rooms_window():
             url=IMAGE_LINKS['rooms'],
             type=ContentType.PHOTO
         ),
+        keyboards.rooms_keyboards(s.selected_rooms),
         keyboards.back_to_menu(s.selected_back_to_menu),
+        getter=getters.get_rooms,
         state=MenuSG.select_rooms
     )
 
