@@ -71,3 +71,22 @@ async def selected_rooms(callback: CallbackQuery, checkbox: ManagedMultiselect, 
         await checkbox.manager.switch_to(state=MenuSG.menu)
 
 
+async def selected_price(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager, price: str):
+    if price.isdigit():
+        data = dialog_manager.current_context().dialog_data
+
+        if 'price' not in data or len(data['price']) == 2:
+            data['price'] = []
+
+        data['price'].append(price)
+
+        if len(data['price']) == 2:
+            price_range = sorted(data['price'])
+            await message.answer(f'Ценовой диапазон: {price_range[0]} - {price_range[1]}')
+            await dialog_manager.switch_to(state=MenuSG.menu)
+    else:
+        await message.answer_photo(
+            photo=IMAGE_LINKS['error'],
+            caption='Введите целое число')
+
+

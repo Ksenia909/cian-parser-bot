@@ -8,11 +8,18 @@ class TgBot:
 
 
 @dataclass
+class RedisHost:
+    host: str
+
+
+@dataclass
 class Config:
     tg_bot: TgBot
+    redis_host: RedisHost
 
 
 def load_config(path: str | None = None) -> Config:
     env = Env()
     env.read_env(path)
-    return Config(tg_bot=TgBot(token=env('BOT_TOKEN')))
+    return Config(tg_bot=TgBot(token=env('BOT_TOKEN')),
+                  redis_host=RedisHost(host=env('REDIS_HOST')))

@@ -26,12 +26,13 @@ def start_window():
 
 def options_menu_window():
     return Window(
-        Const("test menu"),                              #тут можно добавить данные, взятые из контекста
         StaticMedia(
             url=IMAGE_LINKS['options_menu'],
             type=ContentType.PHOTO
         ),
+        Format(TEXT_OF_WINDOWS['menu']),
         keyboards.menu_keyboards(s.selected_option),
+        getter=getters.get_menu,
         state=MenuSG.menu
     )
 
@@ -95,6 +96,10 @@ def price_window():
             type=ContentType.PHOTO
         ),
         Const(TEXT_OF_WINDOWS['time']),
+        TextInput(
+            id='price',
+            on_success=s.selected_price
+        ),
         keyboards.back_to_menu(s.selected_back_to_menu),
         state=MenuSG.select_price
     )
