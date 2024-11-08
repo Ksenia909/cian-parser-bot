@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from random import choice
 
-from cian.proxies import proxy_list
+from config_data.proxy_config import proxy_list
 
 logger = logging.getLogger(__name__)
 
@@ -26,13 +26,16 @@ class CianParser:
             response = await client.get(url=self.url)
             links = []
             try:
-                soup = BeautifulSoup(response.text, 'html.parser')
-                data = soup.find('div', class_='_93444fe79c--wrapper--W0WqH').find_all('div')
-                for d in data:
-                    result = d.find('article', class_='_93444fe79c--container--Povoi _93444fe79c--cont--OzgVc')
-                    if result:
-                        link = result.find('a', class_='_93444fe79c--media--9P6wN').get('href')
-                        links.append(link)
+                if response.status_code == 200:
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    data = soup.find('div', class_='_93444fe79c--wrapper--W0WqH').find_all('div')
+                    for d in data:
+                        result = d.find('article', class_='_93444fe79c--container--Povoi _93444fe79c--cont--OzgVc')
+                        if result:
+                            link = result.find('a', class_='_93444fe79c--media--9P6wN').get('href')
+                            links.append(link)
+                else:
+                    logger.error(f'Failed to retrieve data. Status code: {response.status_code}')
             except Exception as e:
                 logger.error(f'Error getting links: {e}')
 

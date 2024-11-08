@@ -95,7 +95,7 @@ def price_window():
             url=IMAGE_LINKS['price'],
             type=ContentType.PHOTO
         ),
-        Const(TEXT_OF_WINDOWS['time']),
+        Const(TEXT_OF_WINDOWS['price']),
         TextInput(
             id='price',
             on_success=s.selected_price

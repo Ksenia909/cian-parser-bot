@@ -4,4 +4,4 @@ __pycache__/
 .idea/
 venv/
 
-cian/proxies.py
+config_data/proxy_config.py
