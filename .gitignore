@@ -5,3 +5,4 @@ __pycache__/
 venv/
 
 config_data/proxy_config.py
+docker-compose.yml

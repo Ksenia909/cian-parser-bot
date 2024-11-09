@@ -13,7 +13,6 @@ from handlers import handlers
 
 logger = logging.getLogger(__name__)
 
-
 async def main() -> None:
     logging.basicConfig(level=logging.INFO,
                         format='%(filename)s:%(lineno)d #%(levelname)-8s '
@@ -23,7 +22,7 @@ async def main() -> None:
 
     config: Config = load_config()
 
-    redis = Redis(host=config.redis_host.host)
+    redis = Redis(host=config.redis_host.host, port=config.redis_host.port, password=config.redis_host.password)
     storage = RedisStorage(redis=redis, key_builder=DefaultKeyBuilder(with_destiny=True))
     redis_pool = await create_pool()
 
@@ -33,7 +32,6 @@ async def main() -> None:
     )
 
     dp = Dispatcher(storage=storage)
-
     dp.include_router(handlers.router)
     dp.include_router(options_menu_dialogs())
 
@@ -41,7 +39,6 @@ async def main() -> None:
 
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot, arqredis=redis_pool)
-
 
 if __name__ == '__main__':
     asyncio.run(main())
