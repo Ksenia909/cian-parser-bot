@@ -11,6 +11,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from config_data.config import Config, load_config
+from db import Base
 from dialogs.options_menu import options_menu_dialogs
 from handlers import handlers
 from middlewares import DbSessionMiddleware
@@ -42,6 +43,10 @@ async def main() -> None:
 
     async with engine.begin() as conn:
         await conn.execute(text("SELECT 1"))
+
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)  # <-- Временно для разработки
+        await conn.run_sync(Base.metadata.create_all)
 
     bot = Bot(
         token=config.tg_bot.token,

@@ -4,6 +4,8 @@ from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button, ManagedMultiselect
 
 from cian.metro import METRO
+from cian.url_builder import URLBuilder
+from db.requests import merge_or_create_cian_url
 from dialogs.options_menu.constants import MENU_BUTTON_STATES, IMAGE_LINKS
 from dialogs.options_menu.states import MenuSG
 from lexicon.lexicon import TEXT_OF_WINDOWS
@@ -21,6 +23,17 @@ async def selected_option(callback: CallbackQuery, button: Button, dialog_manage
             photo=IMAGE_LINKS['start_search'],
             caption=TEXT_OF_WINDOWS['start_search']
         )
+        data = dialog_manager.current_context().dialog_data
+        session = dialog_manager.middleware_data['session']
+        url = URLBuilder(data).url
+
+        await merge_or_create_cian_url(
+            session=session,
+            telegram_id=callback.from_user.id,
+            url=url,
+            data=data
+        )
+        data.clear()
 
 
 async def selected_back_to_menu(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
@@ -81,8 +94,9 @@ async def selected_price(message: Message, widget: ManagedTextInput, dialog_mana
         data['price'].append(price)
 
         if len(data['price']) == 2:
-            price_range = sorted(data['price'])
-            await message.answer(f'Ценовой диапазон: {price_range[0]} - {price_range[1]}')
+            data["price_min"] = min(data['price'], key=int)
+            data["price_max"] = max(data['price'], key=int)
+            await message.answer(f'Ценовой диапазон: {data["price_min"]} - {data["price_max"]}')
             await dialog_manager.switch_to(state=MenuSG.menu)
     else:
         await message.answer_photo(

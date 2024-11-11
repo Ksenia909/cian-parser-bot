@@ -14,11 +14,11 @@ class URLBuilder:
         if 'time' in data:
             self.add_time(data['time'])
         if 'price' in data:
-            self.add_price(data['price'], is_max=True)
+            self.add_price(data['price_max'], is_max=True)
         if 'metro' in data:
             self.add_metro(data['metro'])
         if 'price' in data:
-            self.add_price(data['price'], is_max=False)
+            self.add_price(data['price_min'], is_max=False)
         self.params['offer_type'] = 'flat'
         if 'time' in data:
             self.add_only_food()
@@ -30,9 +30,9 @@ class URLBuilder:
     def add_time(self, time: str):
         self.params['foot_min'] = time
 
-    def add_price(self, price: list, is_max: bool):
+    def add_price(self, price: str, is_max: bool):
         key = 'maxprice' if is_max else 'minprice'
-        self.params[key] = max(price, key=int) if is_max else min(price, key=int)
+        self.params[key] = price
 
     def add_metro(self, dict_metro: Dict[str, List[str]]):
         metro = []
