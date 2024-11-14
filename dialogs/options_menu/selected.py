@@ -9,6 +9,7 @@ from db.requests import merge_or_create_cian_url
 from dialogs.options_menu.constants import MENU_BUTTON_STATES, IMAGE_LINKS
 from dialogs.options_menu.states import MenuSG
 from lexicon.lexicon import TEXT_OF_WINDOWS
+from utils.scheduler_tasks import parse_and_send_links
 
 
 async def start_menu(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
@@ -34,6 +35,18 @@ async def selected_option(callback: CallbackQuery, button: Button, dialog_manage
             data=data
         )
         data.clear()
+
+        await parse_and_send_links(dialog_manager, callback, url)
+        apscheduler = dialog_manager.middleware_data['apscheduler']
+        apscheduler.add_job(
+            parse_and_send_links,
+            'interval',
+            minutes=10,
+            args=[dialog_manager, callback, url],
+            id=str(dialog_manager.event.from_user.id)
+        )
+
+
 
 
 async def selected_back_to_menu(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):

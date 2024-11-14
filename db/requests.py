@@ -29,9 +29,9 @@ async def merge_or_create_cian_url(
     cian_url = CianURL(
         telegram_id=telegram_id,
         url=url,
-        metro=json.dumps(data.get("metro")),  # Преобразуем dict в строку
+        metro=json.dumps(data.get("metro")),
         time=data.get("time"),
-        rooms=json.dumps(data.get("rooms")),  # Преобразуем list в строку
+        rooms=json.dumps(data.get("rooms")),
         price_min=data.get("price_min"),
         price_max=data.get("price_max"),
     )

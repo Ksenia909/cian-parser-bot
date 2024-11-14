@@ -6,6 +6,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.redis import RedisStorage, Redis, DefaultKeyBuilder
 from aiogram_dialog import setup_dialogs
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from arq import create_pool
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
@@ -14,7 +15,7 @@ from config_data.config import Config, load_config
 from db import Base
 from dialogs.options_menu import options_menu_dialogs
 from handlers import handlers
-from middlewares import DbSessionMiddleware
+from middlewares import DbSessionMiddleware, SchedulerMiddleware
 
 logger = logging.getLogger(__name__)
 asyncio.set_event_loop_policy(WindowsSelectorEventLoopPolicy())
@@ -56,7 +57,12 @@ async def main() -> None:
     dp = Dispatcher(storage=storage)
 
     Sessionmaker = async_sessionmaker(engine, expire_on_commit=False)
+    scheduler = AsyncIOScheduler()
+
     dp.update.outer_middleware(DbSessionMiddleware(Sessionmaker))
+    dp.update.middleware(SchedulerMiddleware(scheduler))
+
+    scheduler.start()
 
     dp.include_router(handlers.router)
     dp.include_router(options_menu_dialogs())
