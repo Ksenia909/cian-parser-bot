@@ -1,7 +1,7 @@
 import json
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.models import User, CianURL
+from db.models import User, CianURL, UserLastLink
 
 
 async def merge_or_create_user(
@@ -25,7 +25,6 @@ async def merge_or_create_cian_url(
         url: str,
         data: dict
 ):
-    print(data)
     cian_url = CianURL(
         telegram_id=telegram_id,
         url=url,
@@ -39,3 +38,16 @@ async def merge_or_create_cian_url(
     await session.merge(cian_url)
     await session.commit()
 
+
+async def merge_or_create_user_last_link(
+        session: AsyncSession,
+        telegram_id: int,
+        last_link: str,
+):
+    user_last_link = UserLastLink(
+        telegram_id=telegram_id,
+        last_link=last_link
+    )
+
+    await session.merge(user_last_link)
+    await session.commit()

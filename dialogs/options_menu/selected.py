@@ -36,13 +36,13 @@ async def selected_option(callback: CallbackQuery, button: Button, dialog_manage
         )
         data.clear()
 
-        await parse_and_send_links(dialog_manager, callback, url)
+        await parse_and_send_links(callback, url, session, dialog_manager.event.from_user.id)
         apscheduler = dialog_manager.middleware_data['apscheduler']
         apscheduler.add_job(
             parse_and_send_links,
             'interval',
             minutes=10,
-            args=[dialog_manager, callback, url],
+            args=[callback, url, session, dialog_manager.event.from_user.id],
             id=str(dialog_manager.event.from_user.id)
         )
 
