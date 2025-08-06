@@ -95,7 +95,7 @@
     "http://username:password@proxy3.com:port"
    ]
 
-6. Создайте файл .env и docker-compose.yml с помощью .env.example и docker-compose.example.yml соответственно. 
+6. Создайте файл .env помощью .env.example. 
 
 7. Запустите PostgreSQL и Redis через Docker:
    ```bash
